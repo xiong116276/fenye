@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分页器</title>
+    <style>
+        a{
+            text-decoration: none;
+        }
+        div{
+            background-color: #fff;
+            border:1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    这是第1页
+</div>
+<p id="page"></p>
+<script src="js/jquery-1.11.3.js"></script>
+<script>
+    var fenye={
+        n : 1,
+        total:110,
+        showPages:function (page,total){
+            var str = '<a href="#">'+page+ '</a> ';
+
+            for (var i = 1;i <= 3;i++){
+                if(page - i >= 1){
+                    str = '<a href="#">'+(page - i) + '</a> ' +str;
+                }
+                if(page + i < total){
+                    str = str +　'<a href="#">'+(page + i) +'</a> ';
+                }
+            }
+
+            if(page === 5){
+                str ='<a href="#">'+ '上一页 '+'</a> ' + '<a href="#">'+1+'</a> ' +str;
+            }else if(page - 4 > 1) {
+                str ='<a href="#">'+ '上一页 '+'</a> ' + '<a href="#">'+1+'</a> ' + '... ' +str;
+            }
+
+            if(page + 4 < total){
+                str = str + '...' + '<a href="#">'+total +'</a> '+ '<a href="#">'+ ' 下一页'+'</a> '
+            }else if(page  < total){
+                str = str + ' ' + '<a href="#">'+total +'</a> ' +  '<a href="#">'+ ' 下一页'+'</a> '
+            }
+
+            return str;
+        },
+        update:function(){
+            var show=this.showPages(this.n,this.total);
+            document.getElementById("page").innerHTML = show;
+            document.getElementById("container").innerHTML = "这是第 "+this.n+" 页";
+        },
+        skip:function () {
+            this.update()
+            var arr=$("#page");
+            for(var i= 0, len = arr.length;i<len; i++){
+                arr[i].addEventListener("click",function (e) {
+                    var data=e.target.innerHTML;
+                    var html=parseInt(data)
+                    if(html%1===0){
+                        this.n = html;
+                    }
+                    if(data.indexOf("上")>-1){
+                        this.n--
+                    }
+                    if(data.indexOf("下")>-1){
+                        this.n++
+                    }
+                    this.update()
+                }.bind(this))
+            }
+        },
+        pageShow:function (){
+            this.update()
+            this.skip()
+        }
+    }
+    fenye.pageShow();
+</script>
+</body>
+</html>
